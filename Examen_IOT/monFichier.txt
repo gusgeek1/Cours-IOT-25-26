@@ -1,1 +1,0 @@
-Examen_IOT/monFichier.txt
