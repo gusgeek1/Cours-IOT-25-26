@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart BirdHouse</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    
+    {% if login_page %}
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-icon"><i class="fas fa-crow"></i></div>
+            <h2>Connexion</h2>
+            
+            {% if error %}
+                <div class="error-banner">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                <input type="password" name="password" placeholder="Entrez le mot de passe" required autofocus>
+                <button type="submit" class="btn-login">SE CONNECTER</button>
+            </form>
+            
+            <div class="login-footer">{{ auteurs }}</div>
+        </div>
+    </div>
+
+    {% else %}
+    <nav class="sidebar">
+        <div class="logo">SMART BIRD</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active" id="nav-dash" onclick="showView('dash')"><i class="fas fa-th-large"></i> Dashboard</a></li>
+            <li><a href="#" id="nav-gallery" onclick="showView('gallery')"><i class="fas fa-images"></i> Galerie</a></li>
+            <li><a href="#" id="nav-config" onclick="showView('config')"><i class="fas fa-cog"></i> Config</a></li>
+        </ul>
+        <div class="logout-section">
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <div id="dash" class="view-section">
+            <div class="header-box">
+                <h2>Parc de Nichoirs</h2>
+                <p>État en temps réel de vos modules ESP32</p>
+            </div>
+
+            <div class="nichoir-grid">
+                {% for n in nichoirs %}
+                <div class="nichoir-card" onclick="selectNichoir('{{n.id}}', '{{n.battery_level}}', '{{n.autonomie}}')">
+                    <div class="card-icon"><i class="fas fa-home"></i></div>
+                    <div class="card-info">
+                        <h3>NCH-{{n.id}}</h3>
+                        <p>{{n.nom}}</p>
+                    </div>
+                    <div class="card-stat">
+                        <i class="fas fa-battery-half"></i> 
+                        <span class="batt-val">{{n.battery_level}}%</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div id="detail-panel" class="detail-panel" style="display:none;">
+                <div class="panel-header">
+                    <h3 id="det-title">NCH-?</h3>
+                    <button class="close-btn" onclick="closePanel()">×</button>
+                </div>
+                <div class="panel-body">
+                    <div class="stat-row">
+                        <span>Autonomie :</span>
+                        <strong id="det-auto" class="accent">--</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Batterie :</span>
+                        <strong id="det-val">--</strong>
+                    </div>
+                    <div class="progress-bar"><div id="det-bar" class="progress-fill"></div></div>
+                    
+                    <button class="btn-action" onclick="showView('gallery')">
+                        <i class="fas fa-images"></i> VOIR LA GALERIE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gallery" class="view-section" style="display:none;">
+            <div class="gallery-header">
+                <h2>Galerie</h2>
+                <button class="filter-btn" id="fav-btn" onclick="toggleFavFilter()">
+                    <i class="far fa-heart"></i> Voir Favoris
+                </button>
+            </div>
+            <div id="grid" class="photo-grid"></div>
+        </div>
+
+        <div id="config" class="view-section" style="display:none;">
+            <div class="config-container">
+                <h2>Configuration</h2>
+                <div class="config-card">
+                    <h3>Infos Projet</h3>
+                    <p>{{ auteurs }}</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>const photos = JSON.parse('{{ photos_json | safe }}');</script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,10 @@
+## [v0.6] 29/12/25 11:46
+
+### Ajouté
+- Gestion des conflits SQL (deadlock, doublons)
+- Tentatives multiples lors de l’enregistrement des captures
+- Mise à jour rapide du dashboard sans créer d’historique inutile
+
+### Corrigé
+- Problèmes de doublons lors de la sauvegarde des photos
+- Incohérences entre batterie reçue et batterie affichée
