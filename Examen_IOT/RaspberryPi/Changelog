@@ -1,0 +1,75 @@
+
+# Changelog – Projet Nichoir IoT
+
+
+
+## [v0.7] – Version final 30/12/25 00:15
+
+### Ajouté
+- Classification qualitative de l’état de la batterie (Excellente, Bonne, Moyenne, Critique)
+- Limitation de l’affichage à 50 photos récentes
+- Gestion robuste des erreurs SQL et MQTT
+- Séparation claire entre données temps réel et historique
+
+### Modifié
+- Simplification du calcul d’autonomie pour une meilleure lisibilité
+- Amélioration de la stabilité du service `reception.py`
+- Optimisation des accès concurrents à la base de données
+
+---
+
+## [v0.6] 29/12/25 11:46
+
+### Ajouté
+- Gestion des conflits SQL (deadlock, doublons)
+- Tentatives multiples lors de l’enregistrement des captures
+- Mise à jour rapide du dashboard sans créer d’historique inutile
+
+### Corrigé
+- Problèmes de doublons lors de la sauvegarde des photos
+- Incohérences entre batterie reçue et batterie affichée
+
+---
+
+## [v0.5]  24/12/25 16:06
+
+### Ajouté
+- Gestion de plusieurs nichoirs via MQTT (`nichoir/<id>/`)
+- Historisation complète des événements (photos, batterie)
+- Galerie photo dynamique côté Web
+
+---
+
+## [v0.4] 24/12/25 14:59
+
+### Ajouté
+- Authentification administrateur dans l’interface Web
+- Système de favoris pour les photos
+- Stockage structuré des images sur le serveur
+
+---
+
+## [v0.3] 24/12/25 14:39
+
+### Ajouté
+- Premier tableau de bord fonctionnel
+- Affichage des nichoirs enregistrés
+- Visualisation des photos capturées
+
+---
+
+## [v0.2] 11/12/25 11:32
+
+### Ajouté
+- Enregistrement des photos dans la base de données
+- Communication MQTT fonctionnelle entre ESP32 et serveur
+- Sauvegarde locale des images
+
+---
+
+## [v0.1] – Prototype initial  11/12/25 11:04
+
+### Ajouté
+- Envoi d’images depuis l’ESP32
+- Réception MQTT basique
+- Tests initiaux de communication et de consommation
