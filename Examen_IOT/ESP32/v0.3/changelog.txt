@@ -1,0 +1,6 @@
+v0.3 – Mode STA / AP
+Date : 02-12-25 16:25
+----------------------------------------
+- Mode station WiFi
+- Mode point d’accès de secours
+- Route /info pour diagnostic
