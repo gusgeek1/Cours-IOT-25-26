@@ -1,0 +1,6 @@
+## [v0.1] – Prototype initial  11/12/25 11:04
+
+### Ajouté
+- Envoi d’images depuis l’ESP32
+- Réception MQTT basique
+- Tests initiaux de communication et de consommation

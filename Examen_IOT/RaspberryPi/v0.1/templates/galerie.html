@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>📸 Galerie {{ 'Nichoir ' + filter_id if filter_id else 'Globale' }}</h1>
+    {% if filter_id %}
+        <a href="/galerie" class="btn btn-secondary">Voir tout</a>
+    {% endif %}
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    {% for photo in photos %}
+    <div class="col">
+        <div class="card shadow-sm">
+            <img src="/photos/{{ photo.filename }}" class="card-img-top" loading="lazy">
+            <div class="card-body">
+                <p class="card-text">
+                    <small class="text-muted">{{ photo.date }}</small>
+                    <span class="badge bg-success float-end">{{ photo.battery_level }}%</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>Aucune photo disponible.</p>
+    {% endfor %}
+</div>
+{% endblock %}

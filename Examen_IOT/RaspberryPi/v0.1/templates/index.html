@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nichoir Connecté</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #eee; }
+        .galerie { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .carte { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 300px; }
+        img { width: 100%; border-radius: 5px; }
+        .infos { margin-top: 10px; color: #555; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>🐦 Galerie du Nichoir</h1>
+    <div class="galerie">
+        {% for photo in photos %}
+        <div class="carte">
+            <img src="/photos/{{ photo.filename }}" loading="lazy">
+            <div class="infos">
+                <strong>{{ photo.date }}</strong><br>
+                Batterie: {{ photo.battery_level }}%
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
