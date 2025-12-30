@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart BirdHouse - Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% if login_page %}
+    <div class="login-screen">
+        <form method="POST" class="login-card">
+            <i class="fas fa-kiwi-bird"></i>
+            <h2>Smart BirdHouse</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Connexion au système</p>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <button type="submit">Connexion</button>
+            <p class="version-tag">{{ auteurs }}</p>
+        </form>
+    </div>
+    {% else %}
+    <nav class="sidebar">
+        <div class="logo">SMART BIRD</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active" onclick="showView('dash')"><i class="fas fa-th-large"></i> Mes Nichoirs</a></li>
+            <li><a href="#" onclick="showView('gallery')"><i class="fas fa-images"></i> Galerie Photos</a></li>
+            <li><a href="#" onclick="showView('config')"><i class="fas fa-cog"></i> Configuration</a></li>
+        </ul>
+        <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+    </nav>
+
+    <main class="main-content">
+        <div id="dash" class="view">
+            <div class="dashboard-container">
+                <section class="list-section">
+                    <h2>Parc de Nichoirs</h2>
+                    <div class="birdhouse-list">
+                        {% for n in nichoirs %}
+                        <div class="list-item" onclick="selectNichoir('{{n.id}}', '{{n.battery_level}}', '{{n.autonomie}}')">
+                            <span class="id-txt">NCH-{{n.id}}</span>
+                            <span class="success-txt">{{n.battery_level}}%</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                <aside class="details-panel">
+                    <div class="big-id" id="det-id">Sélectionnez un nichoir</div>
+                    <div class="info-box">Autonomie estimée : <span id="det-auto" class="accent">--</span></div>
+                    <div class="progress-bar"><div id="det-bar" class="progress-fill"></div></div>
+                    <button class="btn-action" onclick="showView('gallery')">VOIR LA GALERIE</button>
+                </aside>
+            </div>
+        </div>
+
+        <div id="gallery" class="view" style="display:none;">
+            <div class="gallery-header">
+                <h2>Galerie des Visiteurs</h2>
+                <button class="filter-btn" id="fav-toggle" onclick="toggleFavFilter()">Voir Favoris</button>
+            </div>
+            <div class="photo-grid" id="grid"></div>
+        </div>
+
+        <div id="config" class="view" style="display:none; padding: 30px;">
+            <h2>Paramètres du système</h2>
+            <div class="config-card">
+                <h3>Infos Station</h3>
+                <p><strong>Version :</strong> v0.3</p>
+                <p><strong>Auteurs :</strong> A. DEJONGHE & T. COLLARD</p>
+            </div>
+            <div class="config-card">
+                <h3>Mode WiFi</h3>
+                <p>Le nichoir tente de se connecter au WiFi configuré pendant 20s au réveil. Si échec, le mode Access Point est activé[cite: 88].</p>
+            </div>
+            <p class="version-tag" style="margin-top: 50px; text-align: center;">{{ auteurs }}</p>
+        </div>
+    </main>
+
+    <script>const photos = JSON.parse('{{ photos_json | safe }}');</script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% endif %}
+</body>
+</html>

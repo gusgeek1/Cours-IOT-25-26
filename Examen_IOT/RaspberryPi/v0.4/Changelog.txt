@@ -1,0 +1,6 @@
+## [v0.4] 24/12/25 14:59
+
+### Ajouté
+- Authentification administrateur dans l’interface Web
+- Système de favoris pour les photos
+- Stockage structuré des images sur le serveur
