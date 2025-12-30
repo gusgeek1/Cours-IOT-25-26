@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">📊 Tableau de Bord</h1>
+
+<div class="row">
+    {% for n in nichoirs %}
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body text-center">
+                <h3 class="card-title">{{ n.nom }}</h3>
+                <p class="text-muted">ID: {{ n.id }} | Lieu: {{ n.emplacement }}</p>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <div>
+                        <strong>Photos</strong><br>
+                        <span class="badge bg-primary fs-5">{{ n.total_photos }}</span>
+                    </div>
+                    <div>
+                        <strong>Dernière vue</strong><br>
+                        <small>{{ n.last_seen if n.last_seen else 'Jamais' }}</small>
+                    </div>
+                </div>
+
+                <a href="/galerie?id={{ n.id }}" class="btn btn-outline-primary mt-3 w-100">
+                    Voir les photos
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">Aucun nichoir détecté pour le moment.</div>
+    {% endfor %}
+</div>
+{% endblock %}

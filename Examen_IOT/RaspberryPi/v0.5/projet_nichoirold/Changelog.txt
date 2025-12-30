@@ -1,0 +1,7 @@
+
+## [v0.5]  24/12/25 16:06
+
+### Ajouté
+- Gestion de plusieurs nichoirs via MQTT (`nichoir/<id>/`)
+- Historisation complète des événements (photos, batterie)
+- Galerie photo dynamique côté Webs
