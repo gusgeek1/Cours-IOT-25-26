@@ -1,0 +1,36 @@
+#include <Arduino.h>
+#include <M5TimerCAM.h>
+#include <WiFiManager.h> 
+#include <SPIFFS.h>
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+  Serial.println("Debut du nettoyage...");
+
+  // 1. Oublier le WiFi (SSID / Mot de passe)
+  WiFiManager wm;
+  wm.resetSettings();
+  Serial.println("✅ WiFi oublie !");
+
+  // 2. Supprimer le fichier JSON (IP du Raspberry)
+  if (SPIFFS.begin(true)) {
+    // On formate tout le système de fichier, c'est radical et propre
+    SPIFFS.format();
+    Serial.println("✅ Memoire SPIFFS formatee (JSON supprime) !");
+  } else {
+    Serial.println("❌ Erreur SPIFFS");
+  }
+
+  Serial.println("--- TERMINE ---");
+  Serial.println("Tu peux maintenant re-televerser ton code principal !");
+}
+
+void loop() {
+  // Clignote pour dire que c'est fini
+  pinMode(4, OUTPUT); // LED
+  digitalWrite(4, HIGH);
+  delay(100);
+  digitalWrite(4, LOW);
+  delay(100);
+}
