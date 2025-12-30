@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Birdhouse - Interface Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* --- VARIABLES : Thème Eco-Tech (Vert & Sombre) --- */
+        :root {
+            --bg-dark: #121614;       /* Fond principal */
+            --bg-panel: #1b2421;      /* Fond des panneaux */
+            --accent: #4CAF50;        /* Vert principal */
+            --accent-hover: #45a049;
+            --text-main: #e8ece9;
+            --text-muted: #8b9d93;
+            --border: #2c3e34;
+            --success: #66bb6a;
+            --danger: #ef5350;
+            --nav-width: 260px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Inter, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- 1. SIDEBAR --- */
+        .sidebar {
+            width: var(--nav-width);
+            background-color: var(--bg-panel);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .logo {
+            padding: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-links { list-style: none; padding-top: 20px; }
+        .nav-links li { margin-bottom: 5px; padding: 0 15px; }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: var(--accent);
+        }
+        .nav-links i { margin-right: 12px; width: 20px; text-align: center; }
+
+        /* --- 2. MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Top Bar Centrée */
+        .top-bar {
+            height: 70px;
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr; /* Astuce pour centrer parfaitement */
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            width: 100%;
+            max-width: 400px;
+            transition: 0.3s;
+            text-align: center;
+        }
+        .search-bar:focus { outline: none; border-color: var(--accent); text-align: left; }
+
+        /* Gestion des PAGES (Tabs) */
+        .page-section {
+            display: none; /* Caché par défaut */
+            padding: 30px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            animation: fadeIn 0.3s;
+        }
+        .page-section.active { display: block; } /* Affiché si actif */
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { margin-bottom: 25px; color: var(--accent); font-weight: 600; }
+
+        /* --- STYLE SPÉCIFIQUE : DASHBOARD --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            height: 100%;
+        }
+        
+        .list-item {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr 1fr;
+            background-color: var(--bg-panel);
+            padding: 20px;
+            border-radius: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .list-item:hover { transform: translateY(-2px); background-color: #232d29; }
+        .list-item.selected { border-color: var(--accent); background: linear-gradient(90deg, rgba(76,175,80,0.1) 0%, var(--bg-panel) 100%); }
+
+        .details-panel {
+            background-color: var(--bg-panel);
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        /* --- STYLE SPÉCIFIQUE : GALERIE --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .photo-card {
+            background: var(--bg-panel);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+        .photo-card:hover { transform: scale(1.02); border-color: var(--accent); }
+        .photo-card img { width: 100%; height: 160px; object-fit: cover; }
+        .photo-meta { padding: 15px; font-size: 0.85rem; }
+
+        /* --- STYLE SPÉCIFIQUE : CONFIG --- */
+        .config-card {
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-muted); }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+        }
+        .btn-save {
+            background: var(--accent); color: white; border: none; padding: 12px 30px;
+            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
+        }
+        .btn-save:hover { background: var(--accent-hover); }
+
+        /* --- UTILITAIRES --- */
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        .bg-green { background: rgba(76,175,80,0.2); color: var(--success); }
+        .bg-red { background: rgba(239,83,80,0.2); color: var(--danger); }
+        
+        /* Activity Feed Style */
+        .activity-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .activity-time { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="logo"><i class="fas fa-leaf"></i> HEPL BirdHouse</div>
+        <ul class="nav-links">
+            <li><a onclick="showPage('dashboard')" class="active" id="link-dashboard"><i class="fas fa-th-large"></i> Mes Nichoirs</a></li>
+            <li><a onclick="showPage('gallery')" id="link-gallery"><i class="fas fa-images"></i> Galerie Photos</a></li>
+            <li><a onclick="showPage('analytics')" id="link-analytics"><i class="fas fa-chart-line"></i> Analyses</a></li>
+            <li><a onclick="showPage('config')" id="link-config"><i class="fas fa-sliders-h"></i> Configuration</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <h3 id="page-title" style="margin:0; font-weight:500;">Tableau de bord</h3>
+            
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Rechercher un ID, une espèce...">
+            </div>
+
+            <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 15px;">
+                <i class="fas fa-bell" style="color: var(--text-muted); cursor: pointer;"></i>
+                <div style="width: 35px; height: 35px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">AD</div>
+            </div>
+        </header>
+
+        <div id="dashboard" class="page-section active">
+            <div class="dashboard-grid">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>État du parc</h2>
+                        <span class="badge bg-green">3 Nichoirs actifs</span>
+                    </div>
+
+                    <div class="list-item selected">
+                        <strong>NCH-001</strong>
+                        <span style="color: var(--text-muted);">Mésange Charbo.</span>
+                        <span style="color: var(--success);">85% Batt.</span>
+                        <span class="badge bg-green">En ligne</span>
+                    </div>
+
+                    <div class="list-item">
+                        <strong>NCH-002</strong>
+                        <span style="color: var(--text-muted);">Moineau</span>
+                        <span style="color: orange;">42% Batt.</span>
+                        <span class="badge bg-green">En ligne</span>
+                    </div>
+
+                    <div class="list-item">
+                        <strong>NCH-003</strong>
+                        <span style="color: var(--text-muted);">Inconnu</span>
+                        <span style="color: var(--danger);">12% Batt.</span>
+                        <span class="badge bg-red">Hors ligne</span>
+                    </div>
+                </div>
+
+                <aside class="details-panel">
+                    <h3 style="margin-bottom: 20px;">NCH-001 Détails</h3>
+                    <img src="https://loremflickr.com/400/250/bird" style="width:100%; border-radius:8px; margin-bottom:20px;" alt="Direct">
+                    
+                    <div class="activity-feed">
+                        <h4 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">HISTORIQUE RÉCENT</h4>
+                        <div class="activity-item">
+                            <div><i class="fas fa-camera" style="color:var(--accent)"></i> Photo capturée</div>
+                            <span class="activity-time">Aujourd'hui, 08:45</span>
+                        </div>
+                        <div class="activity-item">
+                            <div><i class="fas fa-walking" style="color:orange"></i> Mouvement détecté</div>
+                            <span class="activity-time">Aujourd'hui, 08:44</span>
+                        </div>
+                        <div class="activity-item">
+                            <div><i class="fas fa-battery-three-quarters" style="color:var(--success)"></i> Batterie 85%</div>
+                            <span class="activity-time">Hier, 23:00</span>
+                        </div>
+                    </div>
+                    <button class="btn-save" style="width:100%; margin-top:20px;">Voir le flux complet</button>
+                </aside>
+            </div>
+        </div>
+
+        <div id="gallery" class="page-section">
+            <h2>Galerie des visiteurs</h2>
+            <div class="gallery-grid">
+                <div class="photo-card">
+                    <img src="https://loremflickr.com/320/240/tit" alt="Oiseau">
+                    <div class="photo-meta">
+                        <div style="font-weight: bold;">Détection #104</div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">11/12/2025 - 09:15</div>
+                    </div>
+                </div>
+                <div class="photo-card">
+                    <img src="https://loremflickr.com/320/240/robin" alt="Oiseau">
+                    <div class="photo-meta">
+                        <div style="font-weight: bold;">Détection #103</div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">11/12/2025 - 08:30</div>
+                    </div>
+                </div>
+                <div class="photo-card">
+                    <img src="https://loremflickr.com/320/240/sparrow" alt="Oiseau">
+                    <div class="photo-meta">
+                        <div style="font-weight: bold;">Détection #102</div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">10/12/2025 - 18:45</div>
+                    </div>
+                </div>
+                <div class="photo-card">
+                    <img src="https://loremflickr.com/320/240/bird" alt="Oiseau">
+                    <div class="photo-meta">
+                        <div style="font-weight: bold;">Détection #101</div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem;">10/12/2025 - 16:20</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="analytics" class="page-section">
+            <h2>Analyses Énergétiques & Biologiques</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div class="config-card" style="max-width: 100%;">
+                    <h3>Autonomie Batterie (Derniers 7 jours)</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Validation compétence C2: Fiabilité</p>
+                    <canvas id="batteryChart"></canvas>
+                </div>
+
+                <div class="config-card" style="max-width: 100%;">
+                    <h3>Statistiques Globales</h3>
+                    <div style="margin-top: 20px;">
+                        <div style="margin-bottom: 15px;">
+                            <label style="color:var(--text-muted)">Nombre total de détections (Mois)</label>
+                            <div style="font-size: 2rem; font-weight: bold; color: var(--accent);">342</div>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="color:var(--text-muted)">Heure de pointe</label>
+                            <div style="font-size: 1.5rem;">06:00 - 08:00</div>
+                        </div>
+                        <div>
+                            <label style="color:var(--text-muted)">Consommation Moyenne / Jour</label>
+                            <div style="font-size: 1.5rem; color: orange;">1.2%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="config" class="page-section">
+            <h2>Configuration Système</h2>
+            <div class="config-card">
+                <h3>Paramètres ESP32 (Power Management)</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Ces réglages seront envoyés via MQTT au prochain réveil.</p>
+                
+                <form onsubmit="event.preventDefault(); alert('Configuration sauvegardée !');">
+                    <div class="form-group">
+                        <label>Délai de veille (Deep Sleep Timer)</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <input type="range" min="60" max="300" value="120" class="form-control" oninput="document.getElementById('timerVal').innerText = this.value + ' sec'">
+                            <span id="timerVal" style="font-weight: bold; color: var(--accent);">120 sec</span>
+                        </div>
+                        <small style="color: var(--text-muted);">Plage autorisée : 60s à 300s</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sensibilité PIR</label>
+                        <select class="form-control">
+                            <option>Haute (Petits oiseaux)</option>
+                            <option selected>Moyenne</option>
+                            <option>Basse (Gros animaux seulement)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Flash Infrarouge (Nuit)</label>
+                        <div style="display: flex; gap: 20px;">
+                            <label><input type="radio" name="ir" checked> Auto</label>
+                            <label><input type="radio" name="ir"> Toujours ON</label>
+                            <label><input type="radio" name="ir"> Toujours OFF</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save">Sauvegarder les paramètres</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // 1. Fonction de navigation (SPA)
+        function showPage(pageId) {
+            // Cacher toutes les sections
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            // Désactiver tous les liens
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+
+            // Activer la section demandée
+            document.getElementById(pageId).classList.add('active');
+            // Activer le lien correspondant
+            document.getElementById('link-' + pageId).classList.add('active');
+            
+            // Changer le titre
+            const titles = {
+                'dashboard': 'Tableau de bord',
+                'gallery': 'Galerie Photos',
+                'analytics': 'Analyses & Statistiques',
+                'config': 'Configuration Système'
+            };
+            document.getElementById('page-title').innerText = titles[pageId];
+        }
+
+        // 2. Initialisation du Graphique (Chart.js)
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('batteryChart').getContext('2d');
+            
+            // Dégradé vert pour le graphique
+            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(76, 175, 80, 0.5)');   
+            gradient.addColorStop(1, 'rgba(76, 175, 80, 0.0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['J-6', 'J-5', 'J-4', 'J-3', 'J-2', 'Hier', 'Auj'],
+                    datasets: [{
+                        label: 'Niveau Batterie (%)',
+                        data: [98, 96, 95, 93, 92, 88, 85],
+                        borderColor: '#4CAF50',
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: false, min: 0, max: 100, grid: { color: '#2c3e34' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

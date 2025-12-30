@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BirdHouse IoT - Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- VARIABLES & COULEURS (Inspiré de ton image) --- */
+        :root {
+    /* Fond très sombre légèrement vert */
+    --bg-dark: #121614;       
+    /* Panneaux gris-vert foncé */
+    --bg-panel: #1b2421;      
+    /* Accents : Vert menthe/sauge (moderne) */
+    --accent: #4CAF50;        
+    --accent-hover: #45a049;
+    
+    --text-main: #e8ece9;
+    --text-muted: #8b9d93;    
+    
+    --success: #66bb6a;       
+    --danger: #ef5350;        
+    --border: #2c3e34;
+}
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Inter, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden; /* Pour que ça ressemble à une app native */
+            display: flex;
+        }
+
+        /* --- 1. SIDEBAR (GAUCHE) --- */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-panel);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+        }
+
+        .logo {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent);
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-links { list-style: none; padding-top: 20px; }
+        .nav-links li { padding: 0 20px; margin-bottom: 5px; }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(108, 93, 211, 0.1); /* Violet transparent */
+            color: var(--text-main);
+        }
+        .nav-links a.active { color: var(--accent); }
+        .nav-links i { margin-right: 15px; width: 20px; }
+
+        /* --- 2. MAIN CONTENT (CENTRE) --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: 70px;
+            background-color: var(--bg-panel); /* Ou violet comme sur l'image si tu préfères */
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+        .search-bar {
+            background: var(--bg-dark);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white;
+            width: 300px;
+        }
+
+        /* Dashboard Grid Container */
+        .dashboard-container {
+            flex: 1;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* 2/3 Liste, 1/3 Détails */
+            gap: 30px;
+            overflow-y: auto;
+        }
+
+        /* --- LISTE DES NICHOIRS (Inspiré de "My Products") --- */
+        .list-section h2 { margin-bottom: 20px; font-size: 1.5rem; }
+
+        .birdhouse-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* En-têtes de colonnes */
+        .list-header {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr 1fr;
+            padding: 10px 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Ligne Nichoir */
+        .list-item {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr 1fr;
+            background-color: var(--bg-panel);
+            padding: 20px;
+            border-radius: 12px;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .list-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* L'élément sélectionné (comme le violet sur ton image) */
+        .list-item.selected {
+            border: 1px solid var(--accent);
+            background: linear-gradient(90deg, rgba(108,93,211,0.1) 0%, rgba(30,31,58,1) 100%);
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            color: var(--success);
+            font-size: 0.9rem;
+        }
+        .dot { height: 8px; width: 8px; background-color: var(--success); border-radius: 50%; margin-right: 8px; }
+        .dot.red { background-color: var(--danger); }
+        .dot.orange { background-color: orange; }
+
+        /* --- 3. PANNEAU DE DROITE (Détails & Activité) --- */
+        .details-panel {
+            background-color: var(--bg-panel);
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #ccc; }
+
+        .big-id {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Toggle Switch (pour le mode veille/IR) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .btn-action {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .btn-action:hover { background-color: var(--accent-hover); }
+
+        /* Activity Feed (Timeline verticale) */
+        .activity-section { margin-top: 40px; }
+        .activity-header { display: flex; justify-content: space-between; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem; }
+        
+        .activity-list { list-style: none; }
+        .activity-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 5px;
+            width: 10px; height: 10px;
+            background: var(--bg-panel);
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            z-index: 2;
+        }
+        .activity-item::after {
+            content: '';
+            position: absolute;
+            left: 4px; top: 15px;
+            width: 2px; height: 100%;
+            background: #2d2f4e;
+            z-index: 1;
+        }
+        .activity-item:last-child::after { display: none; }
+        
+        .activity-time { font-size: 0.8em; color: var(--text-muted); display: block; margin-top: 4px; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="logo"><i class="fas fa-crow"></i> HEPL IoT</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active"><i class="fas fa-th-large"></i> Mes Nichoirs</a></li>
+            <li><a href="#"><i class="fas fa-images"></i> Galerie Photos</a></li>
+            <li><a href="#"><i class="fas fa-chart-line"></i> Analyses</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Configuration</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Utilisateurs</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <input type="text" class="search-bar" placeholder="Rechercher un nichoir...">
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <i class="fas fa-bell" style="color: var(--text-muted);"></i>
+                <div class="user-avatar"></div> </div>
+        </header>
+
+        <div class="dashboard-container">
+            
+            <section class="list-section">
+                <h2>Parc de Nichoirs</h2>
+                
+                <div class="list-header">
+                    <span>ID Unique</span>
+                    <span>Modèle / Type</span>
+                    <span>État Batterie</span>
+                    <span>Statut</span>
+                </div>
+
+                <div class="birdhouse-list">
+                    <div class="list-item selected">
+                        <span style="font-weight: bold;">NCH-001</span>
+                        <span style="color: var(--text-muted);">Mésange Charbo.</span>
+                        <span class="badge-status">
+                             85%
+                        </span>
+                        <span class="badge-status"><div class="dot"></div> Actif</span>
+                    </div>
+
+                    <div class="list-item">
+                        <span style="font-weight: bold;">NCH-002</span>
+                        <span style="color: var(--text-muted);">Moineau Dom.</span>
+                        <span class="badge-status" style="color: orange;">
+                             30%
+                        </span>
+                        <span class="badge-status"><div class="dot orange"></div> Veille</span>
+                    </div>
+
+                    <div class="list-item">
+                        <span style="font-weight: bold;">NCH-003</span>
+                        <span style="color: var(--text-muted);">Mésange Bleue</span>
+                        <span class="badge-status" style="color: var(--danger);">
+                             10%
+                        </span>
+                        <span class="badge-status"><div class="dot red"></div> Alerte</span>
+                    </div>
+                    
+                    <div class="list-item">
+                        <span style="font-weight: bold;">NCH-004</span>
+                        <span style="color: var(--text-muted);">Rouge-gorge</span>
+                        <span class="badge-status">
+                             92%
+                        </span>
+                        <span class="badge-status"><div class="dot"></div> Actif</span>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="details-panel">
+                <div class="panel-header">
+                    <span style="color: var(--text-muted);">DÉTAILS NICHOIR</span>
+                    <i class="fas fa-pen" style="color: var(--text-muted); cursor: pointer;"></i>
+                </div>
+
+                <div class="big-id">NCH-001</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <div>
+                        <div style="font-size: 0.8em; color: var(--text-muted);">ESP32 IP</div>
+                        <div style="font-weight: bold;">192.168.1.45</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8em; color: var(--text-muted);">Dernier Ping</div>
+                        <div style="font-weight: bold;">Il y a 5 min</div>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <span>Mode Veille Auto</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Autonomie estimée</span>
+                        <span style="color: var(--success);">4 mois</span>
+                    </div>
+                    <div style="background: #2d2f4e; height: 6px; border-radius: 3px;">
+                        <div style="width: 85%; height: 100%; background: var(--success); border-radius: 3px;"></div>
+                    </div>
+                </div>
+
+                <button class="btn-action">VOIR LA GALERIE</button>
+
+                <div class="activity-section">
+                    <div class="activity-header">
+                        <span>ACTIVITÉ RÉCENTE</span>
+                        <a href="#" style="color: var(--accent); text-decoration: none;">Voir tout</a>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div>Mouvement détecté</div>
+                            <span class="activity-time">Aujourd'hui, 08:30</span>
+                        </li>
+                        <li class="activity-item">
+                            <div>Photo capturée (IR)</div>
+                            <span class="activity-time">Aujourd'hui, 08:31</span>
+                        </li>
+                        <li class="activity-item">
+                            <div>Mise à jour batterie (85%)</div>
+                            <span class="activity-time">Hier, 23:00</span>
+                        </li>
+                         <li class="activity-item">
+                            <div>Connexion MQTT établie</div>
+                            <span class="activity-time">10 Déc, 14:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</body>
+</html>
