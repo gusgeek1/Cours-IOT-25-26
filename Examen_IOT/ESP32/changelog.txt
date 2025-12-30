@@ -1,0 +1,120 @@
+HISTORIQUE DES VERSIONS – PROJET NICHOIR
+
+========================================
+v0.14 – Version finale
+Date : inconnue
+----------------------------------------
+- Version stable et complète du projet
+- Gestion du deep sleep sur batterie
+- Détection de mouvement par capteur PIR
+- Capture d’image infrarouge
+- Envoi MQTT de la photo
+- Envoi périodique de la tension batterie
+- Interface Web de configuration hors ligne
+- Stabilisation générale du système
+
+========================================
+v0.13 – Test PIR + LED
+Date : 23-12-2025 15:44
+----------------------------------------
+- Test du capteur PIR
+- Simulation de capture par allumage LED
+- Validation de la logique de détection
+
+========================================
+v0.12 – Diagnostic PIR / LED
+Date : 19-12-25 12:11
+----------------------------------------
+- Tests matériels du capteur PIR
+- Vérification du câblage Grove
+- Validation des entrées/sorties GPIO
+
+========================================
+v0.11 – Envoi photo + deep sleep
+Date : 19-12-25 12:05
+----------------------------------------
+- Capture d’image avec TimerCAM
+- Envoi MQTT de la photo
+- Mise en veille profonde après transmission
+- Lecture du niveau de batterie
+
+========================================
+v0.10 – Deep sleep fiable
+Date : 14-12-25 16:52
+----------------------------------------
+- Amélioration du deep sleep
+- Réduction de la consommation énergétique
+- Envoi MQTT sans boucle infinie
+
+========================================
+v0.9 – Envoi MQTT continu
+Date : 14-12-25 16:42
+----------------------------------------
+- Envoi d’images en boucle
+- Connexion WiFi permanente
+- Tests de stabilité MQTT
+
+========================================
+v0.8 – Interface Web + MQTT
+Date : 14-12-25 16:07
+----------------------------------------
+- Interface Web complète
+- Mode AP et mode STA
+- Capture photo et envoi MQTT manuel
+
+========================================
+v0.7 – Interface Web avancée
+Date : 02-12-25 17:18
+----------------------------------------
+- Interface Web améliorée
+- Sauvegarde de configuration
+- Capture photo locale
+
+========================================
+v0.6 – Configuration + MQTT
+Date : 11-12-25 13:49
+----------------------------------------
+- Configuration WiFi et MQTT
+- Envoi des données vers serveur
+- Première logique d’autonomie
+
+========================================
+v0.5 – Interface Web stylisée
+Date : 11-12-25 12:42
+----------------------------------------
+- Interface Web designée
+- Sauvegarde des paramètres réseau
+- Capture photo simple
+
+========================================
+v0.4 – Ajout MQTT
+Date : 14-12-25 15:45
+----------------------------------------
+- Ajout de la librairie MQTT
+- Envoi d’image par MQTT
+- Interface Web de test
+
+========================================
+v0.3 – Mode STA / AP
+Date : 02-12-25 16:25
+----------------------------------------
+- Mode station WiFi
+- Mode point d’accès de secours
+- Route /info pour diagnostic
+
+========================================
+v0.2 – Configuration Web
+Date : 02-12-25 16:09
+----------------------------------------
+- Scan des réseaux WiFi
+- Interface Web de configuration
+- Streaming caméra pour diagnostic
+
+========================================
+v0.1 – Version initiale
+Date : 02-12-25 15:28
+----------------------------------------
+- Point d’accès WiFi
+- Interface Web minimale
+- Streaming caméra
+- Sauvegarde SPIFFS
