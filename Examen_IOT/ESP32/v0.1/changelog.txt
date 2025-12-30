@@ -1,7 +1,0 @@
-v0.1 – Version initiale
-Date : 02-12-25 15:28
-----------------------------------------
-- Point d’accès WiFi
-- Interface Web minimale
-- Streaming caméra
-- Sauvegarde SPIFFS
