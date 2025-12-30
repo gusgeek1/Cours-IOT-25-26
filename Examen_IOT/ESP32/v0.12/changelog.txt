@@ -1,0 +1,6 @@
+v0.12 – Diagnostic PIR / LED
+Date : 19-12-25 12:11
+----------------------------------------
+- Tests matériels du capteur PIR
+- Vérification du câblage Grove
+- Validation des entrées/sorties GPIO
