@@ -1,0 +1,12 @@
+v0.14 – Version finale
+Date : 30-12-25 00:15
+----------------------------------------
+- Version stable et complète du projet
+- Gestion du deep sleep sur batterie
+- Détection de mouvement par capteur PIR
+- Capture d’image infrarouge
+- Envoi MQTT de la photo
+- Envoi périodique de la tension batterie
+- Interface Web de configuration hors ligne
+- Stabilisation générale du système
+- Réinitialisation du fichier JSON
