@@ -1,0 +1,6 @@
+v0.2 – Configuration Web
+Date : 02-12-25 16:09
+----------------------------------------
+- Scan des réseaux WiFi
+- Interface Web de configuration
+- Streaming caméra pour diagnostic
