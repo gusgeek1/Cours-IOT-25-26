@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BirdHouse IoT</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    {% if login_page %}
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo large"><i class="fas fa-crow"></i> HEPL IoT</div>
+            <h2>Accès Sécurisé</h2>
+            {% if error %}
+                <p class="error-msg">{{ error }}</p>
+            {% endif %}
+            <form method="POST">
+                <input type="password" name="password" placeholder="Mot de passe" required>
+                <button type="submit" class="btn-login">Se connecter</button>
+            </form>
+        </div>
+    </div>
+    
+    {% else %}
+    
+    <nav class="sidebar">
+        <div class="logo"><i class="fas fa-crow"></i> HEPL IoT</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active" id="nav-dash"><i class="fas fa-th-large"></i> Mes Nichoirs</a></li>
+            <li><a href="#" id="nav-gallery"><i class="fas fa-images"></i> Galerie</a></li>
+            <li><a href="#" id="nav-fav"><i class="fas fa-heart"></i> Favoris</a></li>
+            <li><a href="#" id="nav-config"><i class="fas fa-cog"></i> Configuration</a></li>
+        </ul>
+        <div class="logout-section">
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <h2>Dashboard</h2>
+            <div class="top-bar-user"><i class="fas fa-bell"></i></div>
+        </header>
+
+        <div id="view-dashboard" class="view-section">
+            <div class="dashboard-grid">
+                <section class="list-section">
+                    <h3>Parc de Nichoirs</h3>
+                    <div class="birdhouse-list">
+                        {% for n in nichoirs %}
+                        <div class="list-item" onclick="selectNichoir({{ n.id }}, '{{ n.nom }}', '{{ n.battery }}', '{{ n.last_seen }}', '{{ n.autonomie }}')">
+                            <span class="id-txt">ID: {{ n.id }}</span>
+                            <span class="type-txt">{{ n.nom }}</span>
+                            {% if n.battery and n.battery > 12 %}
+                                <span class="badge-status success-txt">{{ n.battery|int }}%</span>
+                            {% else %}
+                                <span class="badge-status success-txt">{{ n.battery }}V</span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <aside class="details-panel">
+                    <div class="panel-header"><span class="panel-title">ÉTAT DU NICHOIR</span></div>
+                    <div class="big-id" id="detail-id">--</div>
+                    
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <div class="info-label">Dernière activité</div>
+                            <div class="info-value" id="detail-date">--</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Autonomie Estimée</div>
+                            <div class="info-value accent" id="detail-auto">--</div>
+                        </div>
+                    </div>
+
+                    <div class="battery-section">
+                        <div class="battery-labels">    
+                            <span>Batterie</span>
+                            <span class="success-txt" id="detail-batt">--</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="detail-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <button class="btn-action" id="view-gallery-btn">VOIR LES PHOTOS</button>
+                </aside>
+            </div>
+        </div>
+
+        <section id="view-gallery" class="view-section" style="display: none;">
+            <div class="gallery-header">
+                <h2 id="gallery-title">Galerie</h2>
+                <div class="gallery-controls">
+                    <button id="btn-show-all" class="filter-btn active">Tout</button>
+                    <button id="btn-show-fav" class="filter-btn"><i class="fas fa-heart"></i> Favoris</button>
+                </div>
+            </div>
+            <div class="photo-grid" id="photo-grid"></div>
+        </section>
+
+        <section id="view-config" class="view-section" style="display: none; padding: 30px;">
+            <h2>Configuration du Système</h2>
+            <div class="config-card">
+                <h3><i class="fas fa-wifi"></i> Paramètres Réseau</h3>
+                <p>Pour modifier le WiFi, redémarrez le nichoir. Si la connexion échoue (20s), connectez-vous au réseau <strong>Nichoir-Config</strong>.</p>
+            </div>
+            <div class="config-card">
+                <h3><i class="fas fa-server"></i> Serveur MQTT</h3>
+                <form onsubmit="event.preventDefault(); alert('Sauvegardé (Simulation)!');">
+                    <label>IP Broker:</label>
+                    <input type="text" value="localhost" disabled>
+                    <label>Port:</label>
+                    <input type="number" value="1883" disabled>
+                    <button class="btn-action" style="width:auto; margin-top:10px;">Sauvegarder</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <script>const serverPhotos = JSON.parse('{{ photos_json | safe }}');</script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% endif %}
+</body>
+</html>

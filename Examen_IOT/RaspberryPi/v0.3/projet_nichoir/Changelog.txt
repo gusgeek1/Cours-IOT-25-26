@@ -1,0 +1,6 @@
+## [v0.3] 24/12/25 14:39
+
+### Ajouté
+- Premier tableau de bord fonctionnel
+- Affichage des nichoirs enregistrés
+- Visualisation des photos capturées
