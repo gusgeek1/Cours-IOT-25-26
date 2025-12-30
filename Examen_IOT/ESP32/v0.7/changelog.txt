@@ -1,0 +1,6 @@
+v0.7 – Interface Web avancée
+Date : 02-12-25 17:18
+----------------------------------------
+- Interface Web améliorée
+- Sauvegarde de configuration
+- Capture photo locale
