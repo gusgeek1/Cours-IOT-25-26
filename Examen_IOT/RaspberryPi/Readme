@@ -1,0 +1,36 @@
+#Projet Nichoir IoT – Smart Birdhouse
+
+## Description générale
+
+Ce projet consiste en la réalisation d’un **nichoir connecté autonome** basé sur un ESP32.
+Le système est capable de détecter une présence, capturer une image, transmettre les données
+via MQTT et les afficher dans une interface Web.
+
+Le projet est structuré autour de deux services principaux :
+- un service de **réception MQTT** côté serveur,
+- une **interface Web Flask** permettant la visualisation et la gestion des données.
+
+---
+
+## Architecture logicielle
+
+ESP32  
+→ MQTT  
+→ reception.py  
+→ Base de données MySQL  
+→ app.py (Interface Web)
+
+---
+
+## Structure du projet
+
+```text
+project/
+├── app.py              # Interface Web (Flask)
+├── reception.py        # Réception MQTT + stockage BDD
+├── static/
+│   └── photos/         # Images capturées
+├── templates/
+│   └── index.html      # Page principale
+├── README.md
+└── CHANGELOG.md
