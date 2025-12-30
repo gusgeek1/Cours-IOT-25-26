@@ -1,0 +1,6 @@
+## [v0.2] 11/12/25 11:32
+
+### Ajouté
+- Enregistrement des photos dans la base de données
+- Communication MQTT fonctionnelle entre ESP32 et serveur
+- Sauvegarde locale des images
