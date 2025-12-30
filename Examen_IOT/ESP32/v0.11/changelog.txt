@@ -1,0 +1,7 @@
+v0.11 – Envoi photo + deep sleep
+Date : 19-12-25 12:05
+----------------------------------------
+- Capture d’image avec TimerCAM
+- Envoi MQTT de la photo
+- Mise en veille profonde après transmission
+- Lecture du niveau de batterie
