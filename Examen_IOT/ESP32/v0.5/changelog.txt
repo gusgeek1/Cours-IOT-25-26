@@ -1,0 +1,6 @@
+v0.5 – Interface Web stylisée
+Date : 11-12-25 12:42
+----------------------------------------
+- Interface Web designée
+- Sauvegarde des paramètres réseau
+- Capture photo simple
