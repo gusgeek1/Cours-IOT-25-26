@@ -1,0 +1,6 @@
+v0.6 – Configuration + MQTT
+Date : 11-12-25 13:49
+----------------------------------------
+- Configuration WiFi et MQTT
+- Envoi des données vers serveur
+- Première logique d’autonomie
