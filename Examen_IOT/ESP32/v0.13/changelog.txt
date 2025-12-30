@@ -1,0 +1,6 @@
+v0.13 – Test PIR + LED
+Date : 23-12-2025 15:44
+----------------------------------------
+- Test du capteur PIR
+- Simulation de capture par allumage LED
+- Validation de la logique de détection
