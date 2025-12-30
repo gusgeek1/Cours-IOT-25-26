@@ -1,0 +1,6 @@
+v0.8 – Interface Web + MQTT
+Date : 14-12-25 16:07
+----------------------------------------
+- Interface Web complète
+- Mode AP et mode STA
+- Capture photo et envoi MQTT manuel
