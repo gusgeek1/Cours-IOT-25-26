@@ -1,0 +1,6 @@
+v0.9 – Envoi MQTT continu
+Date : 14-12-25 16:42
+----------------------------------------
+- Envoi d’images en boucle
+- Connexion WiFi permanente
+- Tests de stabilité MQTT
