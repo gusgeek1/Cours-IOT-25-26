@@ -1,0 +1,13 @@
+
+## [v0.7] – Version final 30/12/25 00:15
+
+### Ajouté
+- Classification qualitative de l’état de la batterie (Excellente, Bonne, Moyenne, Critique)
+- Limitation de l’affichage à 50 photos récentes
+- Gestion robuste des erreurs SQL et MQTT
+- Séparation claire entre données temps réel et historique
+
+### Modifié
+- Simplification du calcul d’autonomie pour une meilleure lisibilité
+- Amélioration de la stabilité du service `reception.py`
+- Optimisation des accès concurrents à la base de données
