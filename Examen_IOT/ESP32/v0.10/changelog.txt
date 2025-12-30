@@ -1,0 +1,6 @@
+v0.10 – Deep sleep fiable
+Date : 14-12-25 16:52
+----------------------------------------
+- Amélioration du deep sleep
+- Réduction de la consommation énergétique
+- Envoi MQTT sans boucle infinie
